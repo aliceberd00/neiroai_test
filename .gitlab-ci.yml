@@ -1,0 +1,18 @@
+stages:
+  - copy_files
+  - deploy_backend
+
+copy_files:
+  stage: copy_files
+  script:
+    - sshpass -p $BIG1_PASSWORD rsync -rzvh --delete -e 'ssh -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=30" -p 22' $CI_PROJECT_DIR/* root@65.21.237.252:/var/www/alisa-test
+    - sshpass -p $BIG1_PASSWORD rsync -rzvh -e 'ssh -o "StrictHostKeyChecking=no" -p 22' $CI_PROJECT_DIR/Frontend/alisa_berdysheva_test/build/.htaccess root@65.21.237.252:/var/www/alisa-test/Frontend/alisa_berdysheva_test/build
+
+
+deploy_backend:
+  stage: deploy_backend
+  script:
+    - sshpass -p $BIG1_PASSWORD ssh root@65.21.237.252 docker image rm -f alisa_test_api_base_image
+    - sshpass -p $BIG1_PASSWORD ssh root@65.21.237.252 docker build --tag alisa_test_api_base_image --file /var/www/alisa-test/docker_files/FastAPIDockerfile /var/www/alisa-test/Backend/
+    - sshpass -p $BIG1_PASSWORD ssh root@65.21.237.252 docker rm -f alisa_test_api_container
+    - sshpass -p $BIG1_PASSWORD ssh root@65.21.237.252 docker run --name alisa_test_api_container --restart always -d -t -p 8031:8031 alisa_test_api_base_image

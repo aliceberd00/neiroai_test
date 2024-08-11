@@ -1,0 +1,15 @@
+FROM python:3.11
+
+ARG WORKDIR="/alisa-test"
+
+COPY requirements_files/requirements_fastapi.txt requirements_fastapi.txt
+
+RUN pip install -r requirements_fastapi.txt
+
+COPY . $WORKDIR/
+
+WORKDIR $WORKDIR
+
+USER $USER
+
+CMD ["python", "main.py"]

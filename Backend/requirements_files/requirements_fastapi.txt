@@ -1,0 +1,17 @@
+typing
+alembic
+fastapi[all]
+fastapi-users[sqlalchemy]
+psycopg2-binary
+python-dotenv
+aiopg
+sqlalchemy[asyncio]
+sqlalchemy
+uvicorn
+pydantic==1.10.14
+asyncpg==0.28.0
+requests
+asyncio==3.4.3
+fastapi-mail==1.2.5
+sentry-sdk[fastapi]
+anthropic
